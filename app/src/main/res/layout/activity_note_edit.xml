@@ -11,8 +11,10 @@
         android:layout_height="wrap_content"
         android:hint="Тема заметки"
         android:padding="16dp"
-        android:textColor="#FFFFFFFF"
-        android:textColorHint="#FFFFFFFF"/>
+        android:textAllCaps="false"
+        android:textColor="#90FFFFFF"
+        android:textColorHint="#FFFFFFFF"
+        android:textStyle="italic" />
 
     <EditText
         android:id="@+id/contentEditText"
@@ -21,8 +23,9 @@
         android:layout_weight="1"
         android:hint="Текст заметки"
         android:padding="16dp"
-        android:textColor="#FFFFFFFF"
-        android:textColorHint="#FFFFFFFF"/>
+        android:textColor="#90FFFFFF"
+        android:textColorHint="#FFFFFFFF"
+        android:textStyle="italic" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +37,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Сохранить"
-            android:onClick="onSaveNoteClick" />
+            android:backgroundTint="#00FFFFFF"
+            android:onClick="onSaveNoteClick"
+            android:text="Сохранить" />
     </LinearLayout>
 </LinearLayout>
