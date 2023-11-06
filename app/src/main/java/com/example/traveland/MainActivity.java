@@ -1,87 +1,96 @@
 package com.example.traveland;
 
-import static com.example.traveland.DataBaseAccessor.COLUMN_NOTE;
-import static com.example.traveland.DataBaseAccessor.COLUMN_THEME;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
-
-    private ArrayList<Note> notes = new ArrayList<>(); //Список заметок
-    private SimpleCursorAdapter adapter;
-    private ListView listView;
+    private DataBaseAccessor dataBaseAccessor;
+    private SimpleCursorAdapter cursorAdapter;
+    private ListView listView;// Объявляем переменную listView здесь, чтобы она была доступна во всем классе
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dataBaseAccessor = new DataBaseAccessor(this);
+        listView = findViewById(R.id.listView); // Инициализируем переменную listView
+
+        // Получаем адаптер курсора из базы данных
+        cursorAdapter = dataBaseAccessor.getCursorAdapter(this, android.R.layout.simple_list_item_1,
+                new int[]{android.R.id.text1});
+        listView.setAdapter(cursorAdapter);
+
+        // Назначаем слушатель для кнопки добавления заметки
         Button addNoteButton = findViewById(R.id.addNoteButton);
-        addNoteButton.setOnClickListener(new View.OnClickListener() { //слушатель для кнопки "Добавить заметку", который вызываетм метод onAddNoteClick
+        addNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAddNoteClick(v);
-            }
-        });
-
-        listView = findViewById(R.id.listView);
-        adapter = new SimpleCursorAdapter(this, R.layout.activity_main, null, new String[]{COLUMN_THEME, COLUMN_NOTE}, new int[]{R.id.titleEditText, R.id.contentEditText}, 0);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {                    //Устанавливается слушатель для элементов списка.
-            @Override                                                                              //Когда пользователь нажимает на элемент списка, создается новый объект Intent, который содержит информацию о позиции элемента в списке, его заголовке и содержимом.
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);  //ЗАпускается NoteEditActivity
-                intent.putExtra("position", position);
-                intent.putExtra("title", notes.get(position).getTitle());
-                intent.putExtra("content", notes.get(position).getContent());
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                // Открываем вторую активити для редактирования заметки
+                Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);
                 startActivityForResult(intent, 1);
             }
         });
-        loadNotesFromDatabase();
+
+        // Назначаем слушатель для элементов списка
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                int noteId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_ID));
+                String theme = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_THEME));
+                String note = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_NOTE));
+
+                // Обработка нажатия на элемент списка
+                Toast.makeText(getApplicationContext(), "Note ID: " + noteId + ", Theme: " + theme + ", Note: " + note,
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);
+                intent.putExtra("noteId", noteId);
+                intent.putExtra("theme", theme);
+                intent.putExtra("note", note);
+
+                startActivity(intent);
+            }
+        });
     }
 
-
-    public void onAddNoteClick(View view) {                                        //метод вызывается при нажатии на кнопку "Добавить заметку"
-        Intent intent = new Intent(this, NoteEditActivity.class);
-        startActivityForResult(intent, 1);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {      // метод вызывается, когда NoteEditActivity завершает свою работу и возвращает результат
+    // Обработка результата из второй активити
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK) {                               // Если результат успешен, он получает данные из Intent и обновляет список заметок
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             int position = data.getIntExtra("position", -1);
             String title = data.getStringExtra("title");
             String content = data.getStringExtra("content");
 
-            DataBaseAccessor dbAccessor = new DataBaseAccessor(this);
-            if (position == -1) {
-                //dbAccessor.insertNote(title, content); // Вставка новой заметки
+            if (position != -1) {
+                // Редактирование существующей заметки
+                dataBaseAccessor.updateNote(position, title, content);
             } else {
-                dbAccessor.updateNote(position, title, content); // Обновление существующей заметки
+                // Создание новой заметки
+                dataBaseAccessor.insertNote(title, content);
             }
 
-            loadNotesFromDatabase();
+            // Обновляем курсор адаптера
+            cursorAdapter.swapCursor(dataBaseAccessor.getAllNotes());
         }
     }
 
-    // Метод для загрузки заметок из SharedPreferences
-    private void loadNotesFromDatabase() {
-        DataBaseAccessor dbAccessor = new DataBaseAccessor(this);
-        Cursor cursor = (Cursor) dbAccessor.getCursorAdapter(this, R.layout.activity_main, new int[]{R.id.titleEditText, R.id.contentEditText});
-        adapter.swapCursor(cursor);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cursorAdapter.getCursor().close();
     }
 }
