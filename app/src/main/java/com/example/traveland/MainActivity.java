@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("position", position);
                 intent.putExtra("title", notes.get(position).getTitle());
                 intent.putExtra("content", notes.get(position).getContent());
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 startActivityForResult(intent, 1);
             }
         });
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             DataBaseAccessor dbAccessor = new DataBaseAccessor(this);
             if (position == -1) {
-                //dbAccessor.insertNote(title, content); // Вставка новой заметки
+                dbAccessor.insertNote(title, content); // Вставка новой заметки
             } else {
                 dbAccessor.updateNote(position, title, content); // Обновление существующей заметки
             }
