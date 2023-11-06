@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/backbutton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,12 +68,18 @@
 
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="112dp"
-        android:layout_height="48dp"
+        android:id="@+id/backbutton"
+        android:layout_width="82dp"
+        android:layout_height="50dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:text="Button"
+        android:backgroundTint="#00FFFFFF"
+        android:text="back"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/black"
+        android:textColorHint="@color/black"
+        android:textColorLink="@color/black"
         app:layout_constraintStart_toStartOf="@+id/titleEditText"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

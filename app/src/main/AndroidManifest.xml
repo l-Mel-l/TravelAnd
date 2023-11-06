@@ -1,21 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    package="com.example.traveland"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <!-- Определение разрешения (permission) -->
+    <permission
+        android:name="com.example.traveland.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.traveland.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
         android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:extractNativeLibs="false"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TravelAnd"
-        tools:targetApi="31">
+        android:testOnly="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- Главная активность -->
         <activity
-            android:name=".NoteEditActivity"
-            android:exported="false"
-            android:label="@string/title_activity_note_edit"
-            android:theme="@style/Theme.TravelAnd.NoActionBar" />
+            android:name="com.example.traveland.MainActivity"
+            android:exported="true"> <!-- Установите это значение в true -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Активность редактирования заметки -->
+        <activity
+            android:name="com.example.traveland.NoteEditActivity"
+            android:exported="false" />
+
+        <!-- Другие настройки и компоненты вашего приложения -->
+
     </application>
 
 </manifest>
