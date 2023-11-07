@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("noteId", noteId);
                 intent.putExtra("theme", theme);
                 intent.putExtra("note", note);
-
                 startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
             }
         });
