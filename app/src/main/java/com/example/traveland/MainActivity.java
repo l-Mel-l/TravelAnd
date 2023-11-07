@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 // Открываем вторую активити для редактирования заметки
                 Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);
                 startActivityForResult(intent, 1);
+                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
             }
         });
 
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("note", note);
 
                 startActivity(intent);
+
             }
         });
     }
