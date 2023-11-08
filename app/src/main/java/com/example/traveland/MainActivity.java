@@ -1,5 +1,6 @@
 package com.example.traveland;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,12 +59,42 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Note ID: " + noteId + ", Theme: " + theme + ", Note: " + note,
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);
-                intent.putExtra("noteId", noteId);
+                intent.putExtra("noteId", noteId); // Передаем noteId в Intent
                 intent.putExtra("theme", theme);
                 intent.putExtra("note", note);
-                startActivity(intent);
+                startActivityForResult(intent, 1); // Используем startActivityForResult для получения результата от NoteEditActivity
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+                int noteId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_ID));
+                String theme = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_THEME));
 
+                // Отображение диалогового окна для подтверждения удаления
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Удалить заметку")
+                        .setMessage("Вы уверены, что хотите удалить заметку с темой: " + theme + "?")
+                        .setPositiveButton("Удалить", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Удаление заметки из базы данных
+                                dataBaseAccessor.deleteNoteById(noteId);
+                                // Обновление списка заметок
+                                cursorAdapter.swapCursor(dataBaseAccessor.getAllNotes());
+                            }
+                        })
+                        .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Ничего не делать при отмене
+                            }
+                        })
+                        .show();
+
+                return true;
             }
         });
     }

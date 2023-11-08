@@ -27,9 +27,6 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_THEME + " TEXT,"
                 + COLUMN_NOTE + " TEXT);");
-
-        db.execSQL("INSERT INTO " + TABLE_NOTE + "(" + COLUMN_THEME + ", " + COLUMN_NOTE + ") values('theme 1','note 1')");
-        db.execSQL("INSERT INTO " + TABLE_NOTE + "(" + COLUMN_THEME + ", " + COLUMN_NOTE + ") values('theme 2','note 2')");
     }
 
     @Override
@@ -38,6 +35,10 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
             // Дополнительные обновления схемы базы данных для новой версии
             db.execSQL("ALTER TABLE " + TABLE_NOTE + " ADD COLUMN new_column INTEGER DEFAULT 0;");
         }
+    }
+    public void deleteNoteById(int noteId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NOTE, COLUMN_ID + "=?", new String[]{String.valueOf(noteId)});
     }
 
     public SimpleCursorAdapter getCursorAdapter(Context context, int layout, int[] viewIds) {
