@@ -56,12 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Note ID: " + noteId + ", Theme: " + theme + ", Note: " + note,
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);
-                intent.putExtra("noteId", noteId);
+                intent.putExtra("noteId", noteId); // Передаем noteId в Intent
                 intent.putExtra("theme", theme);
                 intent.putExtra("note", note);
-                startActivity(intent);
+                startActivityForResult(intent, 1); // Используем startActivityForResult для получения результата от NoteEditActivity
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
             }
         });
     }

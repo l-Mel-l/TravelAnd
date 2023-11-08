@@ -27,9 +27,6 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_THEME + " TEXT,"
                 + COLUMN_NOTE + " TEXT);");
-
-        db.execSQL("INSERT INTO " + TABLE_NOTE + "(" + COLUMN_THEME + ", " + COLUMN_NOTE + ") values('theme 1','note 1')");
-        db.execSQL("INSERT INTO " + TABLE_NOTE + "(" + COLUMN_THEME + ", " + COLUMN_NOTE + ") values('theme 2','note 2')");
     }
 
     @Override
