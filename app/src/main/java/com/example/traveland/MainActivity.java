@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -56,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 String note = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_NOTE));
 
                 // Обработка нажатия на элемент списка
-                Toast.makeText(getApplicationContext(), "Note ID: " + noteId + ", Theme: " + theme + ", Note: " + note,
-                        Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, NoteEditActivity.class);
                 intent.putExtra("noteId", noteId); // Передаем noteId в Intent
                 intent.putExtra("theme", theme);
@@ -66,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
+        //для удаления при зажатии на заметку
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
