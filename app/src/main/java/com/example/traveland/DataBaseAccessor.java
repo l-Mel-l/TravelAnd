@@ -36,6 +36,10 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + TABLE_NOTE + " ADD COLUMN new_column INTEGER DEFAULT 0;");
         }
     }
+    public void deleteNoteById(int noteId) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NOTE, COLUMN_ID + "=?", new String[]{String.valueOf(noteId)});
+    }
 
     public SimpleCursorAdapter getCursorAdapter(Context context, int layout, int[] viewIds) {
         Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NOTE, null);
