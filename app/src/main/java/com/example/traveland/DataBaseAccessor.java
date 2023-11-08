@@ -36,6 +36,7 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + TABLE_NOTE + " ADD COLUMN new_column INTEGER DEFAULT 0;");
         }
     }
+    //удаление из базы данных
     public void deleteNoteById(int noteId) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_NOTE, COLUMN_ID + "=?", new String[]{String.valueOf(noteId)});
