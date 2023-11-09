@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WhiteBorderEditText">
+        <item name="android:background">@drawable/edit_text_with_white_border</item>
+    </style>
+</resources>
