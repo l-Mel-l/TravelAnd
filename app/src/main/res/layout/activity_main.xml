@@ -23,7 +23,7 @@
         android:backgroundTint="#00FFFFFF"
         android:text="Добавить"
         android:textAlignment="center"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFFFF"
         android:textSize="12sp"
         android:textStyle="italic"
