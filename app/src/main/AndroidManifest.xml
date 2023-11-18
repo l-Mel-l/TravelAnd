@@ -19,9 +19,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NoteEditActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
         </activity>
