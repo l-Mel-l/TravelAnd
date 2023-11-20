@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Если это первый запуск, открываем фрагмент со списком заметок
             showNotesListFragment();
+
         }
     }
 
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private void showNotesListFragment() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.listFragment, notesListFragment);
-        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.detailFragment, noteEditFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        showNotesListFragment();
     }
 
     // Обработка результата из фрагмента редактирования заметки
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Обновляем список заметок
-        notesListFragment.updateNotesList();
+       notesListFragment.updateNotesList();
        showNotesListFragment(); // Переключаемся обратно на список заметок
     }
 }

@@ -60,4 +60,7 @@ public class NotesListFragment extends Fragment {
 
         return view;
     }
+    public void updateNotesList() {
+        cursorAdapter.changeCursor(dataBaseAccessor.getAllNotes());
+    }
 }

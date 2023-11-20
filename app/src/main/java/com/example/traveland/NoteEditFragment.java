@@ -48,10 +48,13 @@ public class NoteEditFragment extends Fragment {
                     // Передаем данные в активность
                     if (getActivity() != null) {
                         ((MainActivity) getActivity()).onNoteEditResult(noteId, title, content);
+                        getActivity().getSupportFragmentManager().popBackStack();
+
                     }
                 }
             }
         });
+
 
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,8 +65,6 @@ public class NoteEditFragment extends Fragment {
                 }
             }
         });
-
-        // Остальной код остается таким же
 
         return view;
     }
