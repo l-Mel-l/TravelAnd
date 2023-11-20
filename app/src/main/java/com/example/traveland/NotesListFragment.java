@@ -58,8 +58,6 @@ public class NotesListFragment extends Fragment {
             }
         });
 
-        // Остальной код для долгого нажатия и удаления заметки
-
         return view;
     }
 }
