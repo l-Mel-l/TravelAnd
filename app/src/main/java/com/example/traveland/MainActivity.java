@@ -45,10 +45,20 @@ public class MainActivity extends AppCompatActivity {
         args.putInt("noteId", noteId);
         args.putString("theme", theme);
         args.putString("note", note);
-        noteEditFragment.setArguments(args);
 
-        transaction.replace(R.id.detailFragment, noteEditFragment);
-        transaction.addToBackStack(null);
+        // Проверяем, есть ли уже существующий NoteEditFragment
+        NoteEditFragment existingFragment = (NoteEditFragment) fragmentManager.findFragmentByTag(NoteEditFragment.class.getSimpleName());
+
+        if (existingFragment == null) {
+            // Если фрагмент не существует, создаем новый
+            noteEditFragment.setArguments(args);
+            transaction.replace(R.id.detailFragment, noteEditFragment, NoteEditFragment.class.getSimpleName());
+            transaction.addToBackStack(null);
+        } else {
+            // Если фрагмент существует, обновляем его данные
+            existingFragment.updateData(noteId, theme, note);
+        }
+
         transaction.commit();
         showNotesListFragment();
     }

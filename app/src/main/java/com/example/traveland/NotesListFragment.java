@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -47,9 +48,11 @@ public class NotesListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor) parent.getItemAtPosition(position);
-                int noteId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_ID));
+                int noteId = position;
                 String theme = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_THEME));
                 String note = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_NOTE));
+                String toastMessage = "ID: " + id + "\nTheme: " + theme + "\nNote: " + note;
+                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show();
 
                 // Открываем второй фрагмент для редактирования существующей заметки
                 if (getActivity() != null) {
