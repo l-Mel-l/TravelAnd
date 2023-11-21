@@ -1,6 +1,7 @@
 package com.example.traveland;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import android.content.res.Configuration;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,6 +18,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+        if (isTablet()) {
+            setContentView(R.layout.activity_main);
+        } else {
+            setContentView(R.layout.activity_main);
+        }
 
         dataBaseAccessor = new DataBaseAccessor(this);
         fragmentManager = getSupportFragmentManager();
@@ -27,14 +33,15 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Если это первый запуск, открываем фрагмент со списком заметок
             showNotesListFragment();
-
         }
     }
+
 
     // Метод для показа фрагмента со списком заметок
     private void showNotesListFragment() {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.listFragment, notesListFragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -50,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.detailFragment, noteEditFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-        showNotesListFragment();
     }
 
     // Обработка результата из фрагмента редактирования заметки
@@ -64,7 +70,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Обновляем список заметок
-       notesListFragment.updateNotesList();
+        notesListFragment.updateNotesList();
        showNotesListFragment(); // Переключаемся обратно на список заметок
+    }
+    private boolean isTablet() {
+        int screenLayout = getResources().getConfiguration().screenLayout;
+        int screenSize = screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+
+        return screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE
+                || screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 }
