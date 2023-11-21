@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/tmb_33387_2735"
+    android:background="#D5B116"
     android:orientation="horizontal">
 
     <androidx.fragment.app.FragmentContainerView
