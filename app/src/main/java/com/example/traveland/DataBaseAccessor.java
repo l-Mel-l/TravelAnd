@@ -71,5 +71,13 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
     public Cursor getAllNotes() {
         return database.query("NOTE", null, null, null, null, null, null);
     }
+
+    public Cursor getNoteById(int noteId) {
+        SQLiteDatabase db = getReadableDatabase();
+        String selection = COLUMN_ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(noteId)};
+        return db.query(TABLE_NOTE, null, selection, selectionArgs, null, null, null);
+    }
+
 }
 

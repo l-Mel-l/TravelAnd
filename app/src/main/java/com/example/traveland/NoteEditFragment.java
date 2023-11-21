@@ -49,7 +49,6 @@ public class NoteEditFragment extends Fragment {
                     if (getActivity() != null) {
                         ((MainActivity) getActivity()).onNoteEditResult(noteId, title, content);
                         getActivity().getSupportFragmentManager().popBackStack();
-
                     }
                 }
             }
@@ -82,5 +81,11 @@ public class NoteEditFragment extends Fragment {
                     })
                     .show();
         }
+    }
+    public void updateData(int noteId, String theme, String note) {
+        this.noteId = noteId;
+        this.theme = theme;
+        this.noteContent = note;
+        // Здесь вы можете обновить отображение данных, если требуется
     }
 }
