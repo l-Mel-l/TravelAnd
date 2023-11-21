@@ -34,6 +34,18 @@ public class NoteEditFragment extends Fragment {
         contentEditText = view.findViewById(R.id.contentEditText);
         backbutton = view.findViewById(R.id.backbutton);
         saveButton = view.findViewById(R.id.saveButton);
+        Bundle args = getArguments();
+
+        if (args != null) {
+            noteId = args.getInt("noteId");
+            theme = args.getString("theme");
+            noteContent = args.getString("note");
+        }
+
+        // Update data in EditText fields
+        titleEditText.setText(theme);
+        contentEditText.setText(noteContent);
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +72,7 @@ public class NoteEditFragment extends Fragment {
             public void onClick(View view) {
                 // Закрываем текущий фрагмент
                 if (getActivity() != null) {
-                    getActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().getSupportFragmentManager().beginTransaction().hide(NoteEditFragment.this).commit();
                 }
             }
         });

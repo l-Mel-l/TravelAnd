@@ -59,11 +59,19 @@ public class MainActivity extends AppCompatActivity {
         if (existingFragment == null) {
             // Если фрагмент не существует, создаем новый
             noteEditFragment.setArguments(args);
-            transaction.replace(R.id.detailFragment, noteEditFragment, NoteEditFragment.class.getSimpleName());
             transaction.addToBackStack(null);
+            transaction.replace(R.id.detailFragment, noteEditFragment, NoteEditFragment.class.getSimpleName());
         } else {
             // Если фрагмент существует, обновляем его данные
-            existingFragment.updateData(noteId, theme, note);
+            if (fragmentManager.findFragmentByTag("NoteEditFragment").isHidden()) {
+                // Отображаем скрытый NoteEditFragment и обновляем данные в нём
+                existingFragment.updateData(noteId, theme, note);
+                fragmentManager.beginTransaction()
+                        .show(fragmentManager.findFragmentByTag("NoteEditFragment"))
+                        .commit();
+            } else {
+                super.onBackPressed();
+            }
         }
 
         transaction.commit();
