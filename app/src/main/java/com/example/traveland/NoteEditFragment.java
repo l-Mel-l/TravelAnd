@@ -86,6 +86,8 @@ public class NoteEditFragment extends Fragment {
         this.noteId = noteId;
         this.theme = theme;
         this.noteContent = note;
-        // Здесь вы можете обновить отображение данных, если требуется
+        System.out.println(noteId+theme+note);
+        titleEditText.setText(theme);
+        contentEditText.setText(note);
     }
 }
