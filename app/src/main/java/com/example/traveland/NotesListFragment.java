@@ -40,7 +40,7 @@ public class NotesListFragment extends Fragment {
             public void onClick(View v) {
                 // Открываем второй фрагмент для редактирования заметки
                 if (getActivity() != null) {
-                    ((MainActivity) getActivity()).showNoteEditFragment(-1, "", ""); // -1 indicates a new note
+                    ((MainActivity) getActivity()).showNoteEditFragment(-1, "", ""); // -1 определяет новую заметку
                 }
             }
         });
@@ -52,7 +52,7 @@ public class NotesListFragment extends Fragment {
                 return true;
             }
             });
-
+        //нажатие на элемент списка
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,8 +60,6 @@ public class NotesListFragment extends Fragment {
                 int noteId = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_ID));
                 String theme = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_THEME));
                 String note = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseAccessor.COLUMN_NOTE));
-                String toastMessage = "ID: " + id + "\nTheme: " + theme + "\nNote: " + note;
-                Toast.makeText(requireContext(), toastMessage, Toast.LENGTH_SHORT).show();
 
                 // Открываем второй фрагмент для редактирования существующей заметки
                 if (getActivity() != null) {
@@ -92,7 +90,7 @@ public class NotesListFragment extends Fragment {
                 .show();
     }
 
-    // Удаляет заметку по идентификатору
+    // Удаляет заметку по id
     private void deleteNoteById(long noteId) {
         dataBaseAccessor.deleteNoteById((int) noteId);
     }
