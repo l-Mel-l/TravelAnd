@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D5B116"
+    android:background="@drawable/sec"
     android:orientation="horizontal">
 
     <androidx.fragment.app.FragmentContainerView
@@ -23,7 +23,7 @@
         android:id="@+id/detailFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:name="com.example.traveland.NoteEditFragment"
+        android:name="com.example.traveland.BlankFragment"
         app:layout_constraintStart_toEndOf="@id/listFragment"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

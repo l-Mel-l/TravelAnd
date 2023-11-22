@@ -20,7 +20,6 @@ public class NotesListFragment extends Fragment {
     private ListView listView;
 
     public NotesListFragment() {
-        // Обязательный пустой конструктор
     }
 
     @Override

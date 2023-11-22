@@ -25,6 +25,16 @@ public class NoteEditFragment extends Fragment {
         // Обязательный пустой конструктор
     }
 
+    public static NoteEditFragment newInstance(int noteId, String name, String text) {
+        NoteEditFragment fragment = new NoteEditFragment();
+        Bundle args = new Bundle();
+        args.putInt("noteId", noteId);
+        args.putString("name", name);
+        args.putString("text", text);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,8 +48,8 @@ public class NoteEditFragment extends Fragment {
 
         if (args != null) {
             noteId = args.getInt("noteId");
-            theme = args.getString("theme");
-            noteContent = args.getString("note");
+            theme = args.getString("name");
+            noteContent = args.getString("text");
         }
 
         // Update data in EditText fields
@@ -67,15 +77,7 @@ public class NoteEditFragment extends Fragment {
         });
 
 
-        backbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Закрываем текущий фрагмент
-                if (getActivity() != null) {
-                    getActivity().getSupportFragmentManager().beginTransaction().hide(NoteEditFragment.this).commit();
-                }
-            }
-        });
+        backbutton.setOnClickListener(view1 -> getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, new BlankFragment()).commit());
 
         return view;
     }
@@ -98,7 +100,6 @@ public class NoteEditFragment extends Fragment {
         this.noteId = noteId;
         this.theme = theme;
         this.noteContent = note;
-        System.out.println(noteId+theme+note);
         titleEditText.setText(theme);
         contentEditText.setText(note);
     }

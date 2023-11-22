@@ -48,34 +48,8 @@ public class MainActivity extends AppCompatActivity {
     // Метод для показа фрагмента редактирования заметки
     public void showNoteEditFragment(int noteId, String theme, String note) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        Bundle args = new Bundle();
-        args.putInt("noteId", noteId);
-        args.putString("theme", theme);
-        args.putString("note", note);
-
-        // Проверяем, есть ли уже существующий NoteEditFragment
-        NoteEditFragment existingFragment = (NoteEditFragment) fragmentManager.findFragmentByTag(NoteEditFragment.class.getSimpleName());
-
-        if (existingFragment == null) {
-            // Если фрагмент не существует, создаем новый
-            noteEditFragment.setArguments(args);
-            transaction.addToBackStack(null);
-            transaction.replace(R.id.detailFragment, noteEditFragment, NoteEditFragment.class.getSimpleName());
-        } else {
-            // Если фрагмент существует, обновляем его данные
-            if (fragmentManager.findFragmentByTag("NoteEditFragment").isHidden()) {
-                // Отображаем скрытый NoteEditFragment и обновляем данные в нём
-                existingFragment.updateData(noteId, theme, note);
-                fragmentManager.beginTransaction()
-                        .show(fragmentManager.findFragmentByTag("NoteEditFragment"))
-                        .commit();
-            } else {
-                super.onBackPressed();
-            }
+        getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, NoteEditFragment.newInstance(noteId, theme, note)).commit();
         }
-
-        transaction.commit();
-    }
 
     // Обработка результата из фрагмента редактирования заметки
     public void onNoteEditResult(int position, String title, String content) {
