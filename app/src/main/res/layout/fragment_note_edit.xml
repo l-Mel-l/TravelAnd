@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00FBE89E"
+    android:background="#00808080"
     android:orientation="vertical">
 
     <EditText
@@ -22,7 +22,6 @@
         android:textColorHighlight="#A51B1B"
         android:textColorHint="#000000"
         android:textSize="20sp"
-        android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@+id/contentEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.428"

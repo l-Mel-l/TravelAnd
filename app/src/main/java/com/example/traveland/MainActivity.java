@@ -1,17 +1,32 @@
 package com.example.traveland;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.content.res.Configuration;
+import android.provider.ContactsContract;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class MainActivity extends AppCompatActivity {
+    ListView ThemesListView;
+    ArrayList<Note> notes;
+    ArrayAdapter<String> noteAdapter;
+    ServerAccesor serverAccessor = new ServerAccesor(SERVICE_ADDRESS);
 
     private DataBaseAccessor dataBaseAccessor;
     private FragmentManager fragmentManager;
     private NotesListFragment notesListFragment;
     private NoteEditFragment noteEditFragment;
+
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         } else {
             setContentView(R.layout.activity_main);
         }
+        ThemesListView = findViewById(R.id.listView);
+        noteAdapter = AdapterUpdate(new ArrayList<ContactsContract.CommonDataKinds.Note>());
+        Intent NoteIntent = new Intent(this, NoteEditFragment.class);
+
 
         dataBaseAccessor = new DataBaseAccessor(this);
         fragmentManager = getSupportFragmentManager();
@@ -35,7 +54,17 @@ public class MainActivity extends AppCompatActivity {
             showNotesListFragment();
         }
     }
+    private ArrayAdapter<String> AdapterUpdate(ArrayList<Note> list) {
 
+        ArrayList<String> stringList = serverAccessor.getStringListFromNoteList(list);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, stringList);
+
+// установить адаптер в listview
+        ThemesListView.setAdapter(adapter);
+        return adapter;
+    }
 
     // Метод для показа фрагмента со списком заметок
     private void showNotesListFragment() {
@@ -48,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     // Метод для показа фрагмента редактирования заметки
     public void showNoteEditFragment(int noteId, String theme, String note) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, NoteEditFragment.newInstance(noteId, theme, note)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, NoteEditFragment    .newInstance(noteId, theme, note)).commit();
         }
 
     // Обработка результата из фрагмента редактирования заметки
