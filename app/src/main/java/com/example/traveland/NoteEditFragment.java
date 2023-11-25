@@ -52,7 +52,7 @@ public class NoteEditFragment extends Fragment {
             noteContent = args.getString("text");
         }
 
-        // ставим информацию
+        // Update data in EditText fields
         titleEditText.setText(theme);
         contentEditText.setText(noteContent);
 
@@ -77,9 +77,7 @@ public class NoteEditFragment extends Fragment {
         });
 
 
-        backbutton.setOnClickListener(
-                view1 -> getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, new BlankFragment()).commit()
-        );
+        backbutton.setOnClickListener(view1 -> getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, new BlankFragment()).commit());
 
         return view;
     }
@@ -97,5 +95,12 @@ public class NoteEditFragment extends Fragment {
                     })
                     .show();
         }
+    }
+    public void updateData(int noteId, String theme, String note) {
+        this.noteId = noteId;
+        this.theme = theme;
+        this.noteContent = note;
+        titleEditText.setText(theme);
+        contentEditText.setText(note);
     }
 }
