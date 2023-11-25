@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.SimpleCursorAdapter;
 
+import java.util.ArrayList;
+
 public class DataBaseAccessor extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "db.db";
     private static final int DB_VERSION = 3;
@@ -78,6 +80,5 @@ public class DataBaseAccessor extends SQLiteOpenHelper {
         String[] selectionArgs = new String[]{String.valueOf(noteId)};
         return db.query(TABLE_NOTE, null, selection, selectionArgs, null, null, null);
     }
-
 }
 

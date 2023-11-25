@@ -1,8 +1,7 @@
 package com.example.traveland;
 
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-
+import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,9 +13,9 @@ import java.util.ArrayList;
 
 
 public class ServerAccesor {
-    private String serviceAddress;
-    public ServerAccesor(String serviceAddress){
-        serviceAddress = serviceAddress;
+    private static String serviceAddress;
+    public ServerAccesor(String ServiceAddress){
+        serviceAddress = ServiceAddress;
     }
     //Получить список тем из списка заметок
     public ArrayList<String>getStringListFromNoteList(ArrayList<Note> noteList){
@@ -27,11 +26,11 @@ public class ServerAccesor {
         return stringList;
     }
     //получить данные с сервера
-    public ArrayList<Note> getData() throws IOException{
+    public static ArrayList<Note> getData() throws IOException{
         return Parse(GetContent());
     }
     //из json в данные
-    public ArrayList<Note> Parse(String content){
+    public static ArrayList<Note> Parse(String content){
         ArrayList<Note> dataItems;
         try{
             Gson gson = new Gson();
@@ -44,7 +43,7 @@ public class ServerAccesor {
         return null;
     }
     //подключение и забирание данных
-    private String GetContent() throws IOException{
+    private static String GetContent() throws IOException{
         BufferedReader reader = null;
         InputStream stream = null;
         HttpURLConnection connection = null;
@@ -61,18 +60,49 @@ public class ServerAccesor {
             String line;
             while ((line = reader.readLine()) != null){
                 buf.append(line).append("\n");
+                System.out.println(buf);
             }
             return buf.toString();
         }
         catch (Exception exception){
-
+            exception.printStackTrace(); // Лучше заменить на логирование
+            throw exception;
         }
         finally {
-            if (reader != null){
+            if (reader != null) {
                 reader.close();
             }
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
+    }
+    public void sendDataToServer(ArrayList<Note> notes) {
+        // Преобразование списка заметок в JSON
+        Gson gson = new Gson();
+        String json = gson.toJson(notes);
 
-        return null;
+        // Отправка данных на сервер (например, с использованием HTTP POST-запроса)
+        // Реализуйте этот метод в соответствии с вашей серверной структурой
+        // ...
+    }
+    public static void syncDataWithServer(DataBaseAccessor dataBaseAccessor) {
+        try {
+            ArrayList<Note> serverData = getData();
+
+            // Очистка локальной базы данных
+            //dataBaseAccessor.clearDatabase();
+
+            // Сохранение данных из сервера в локальную базу данных
+            for (Note note : serverData) {
+                dataBaseAccessor.insertNote(note.theme, note.noteText);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Обработка ошибок при получении данных с сервера
+        }
     }
 }
