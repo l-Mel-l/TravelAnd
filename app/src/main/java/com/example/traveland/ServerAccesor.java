@@ -1,15 +1,15 @@
 package com.example.traveland;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ServerAccesor {
@@ -26,21 +26,40 @@ public class ServerAccesor {
         return stringList;
     }
     //получить данные с сервера
-    public static ArrayList<Note> getData() throws IOException{
+    public static ArrayList<TravelPlan> getData() throws IOException{
         return Parse(GetContent());
     }
     //из json в данные
-    public static ArrayList<Note> Parse(String content){
-        ArrayList<Note> dataItems;
-        try{
+    public static ArrayList<TravelPlan> Parse(String content){
+        try {
             Gson gson = new Gson();
-            Type listofComputers = new TypeToken<ArrayList<Note>>() {}.getType();
-            dataItems = gson.fromJson(content,listofComputers);
-            return dataItems;
-        }catch (Exception ex){
-
+            TravelData travelData = gson.fromJson(content, TravelData.class);
+            return travelData != null ? (ArrayList<TravelPlan>) travelData.getTravelPlans() : new ArrayList<>();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ArrayList<>();
         }
-        return null;
+    }
+
+    public class TravelData {
+        private List<TravelPlan> travelPlans;
+
+        public List<TravelPlan> getTravelPlans() {
+            return travelPlans;
+        }
+    }
+
+    public class TravelPlan {
+        private String destination;
+        private String date;
+
+        public String getDestination() {
+            return destination;
+        }
+
+        public String getDate() {
+            return date;
+        }
     }
     //подключение и забирание данных
     private static String GetContent() throws IOException{
@@ -65,7 +84,7 @@ public class ServerAccesor {
             return buf.toString();
         }
         catch (Exception exception){
-            exception.printStackTrace(); // Лучше заменить на логирование
+            exception.printStackTrace();
             throw exception;
         }
         finally {
@@ -90,19 +109,26 @@ public class ServerAccesor {
         // ...
     }
     public static void syncDataWithServer(DataBaseAccessor dataBaseAccessor) {
-        try {
-            ArrayList<Note> serverData = getData();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<TravelPlan> serverData = getData();
 
-            // Очистка локальной базы данных
-            //dataBaseAccessor.clearDatabase();
+                    // Очистка локальной базы данных
+                    //dataBaseAccessor.clearDatabase();
 
-            // Сохранение данных из сервера в локальную базу данных
-            for (Note note : serverData) {
-                dataBaseAccessor.insertNote(note.theme, note.noteText);
+                    // Сохранение данных из сервера в локальную базу данных
+                    for (TravelPlan note : serverData) {
+                        dataBaseAccessor.insertNote(note.getDestination(), note.getDate());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Обработка ошибок при выполнении запроса
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Обработка ошибок при получении данных с сервера
-        }
+        });
+
+        thread.start();
     }
 }

@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private NotesListFragment notesListFragment;
     private NoteEditFragment noteEditFragment;
-
+    private static final String SERVICE_ADDRESS = "http://37.77.105.18/api/TravelPlans";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
         notesListFragment = new NotesListFragment();
         noteEditFragment = new NoteEditFragment();
+        ServerAccesor serverAccessor = new ServerAccesor(SERVICE_ADDRESS);
+        ServerAccesor.syncDataWithServer(dataBaseAccessor);
+        //отправить данные на сервер
+//        try {
+//            ArrayList<Note> localNotes = dataBaseAccessor.getAllNotesList();
+//            ServerAccesor.sendData(localNotes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         if (savedInstanceState == null) {
             // Если это первый запуск, открываем фрагмент со списком заметок
