@@ -31,13 +31,6 @@ public class MainActivity extends AppCompatActivity {
         noteEditFragment = new NoteEditFragment();
         ServerAccesor serverAccessor = new ServerAccesor(SERVICE_ADDRESS);
         ServerAccesor.syncDataWithServer(dataBaseAccessor);
-        //отправить данные на сервер
-//        try {
-//            ArrayList<Note> localNotes = dataBaseAccessor.getAllNotesList();
-//            ServerAccesor.sendData(localNotes);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         if (savedInstanceState == null) {
             // Если это первый запуск, открываем фрагмент со списком заметок

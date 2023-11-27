@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -99,15 +100,6 @@ public class ServerAccesor {
             }
         }
     }
-    public void sendDataToServer(ArrayList<Note> notes) {
-        // Преобразование списка заметок в JSON
-        Gson gson = new Gson();
-        String json = gson.toJson(notes);
-
-        // Отправка данных на сервер (например, с использованием HTTP POST-запроса)
-        // Реализуйте этот метод в соответствии с вашей серверной структурой
-        // ...
-    }
     public static void syncDataWithServer(DataBaseAccessor dataBaseAccessor) {
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -125,6 +117,54 @@ public class ServerAccesor {
                 } catch (IOException e) {
                     e.printStackTrace();
                     // Обработка ошибок при выполнении запроса
+                }
+            }
+        });
+
+        thread.start();
+    }
+    public void sendDataToServer(ArrayList<Note> notes) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Преобразование списка заметок в JSON
+                    Gson gson = new Gson();
+                    String json = gson.toJson(notes);
+
+                    // Создание URL и открытие HTTP-соединения
+                    URL url = new URL(serviceAddress);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                    // Настройка соединения для отправки POST-запроса
+                    connection.setRequestMethod("POST");
+                    connection.setDoOutput(true);
+                    connection.setRequestProperty("Content-Type", "application/json");
+
+                    // Получение потока вывода и запись JSON-данных
+                    try (OutputStream os = connection.getOutputStream()) {
+                        byte[] input = json.getBytes("utf-8");
+                        os.write(input, 0, input.length);
+                    }
+
+                    // Получение ответа от сервера
+                    int responseCode = connection.getResponseCode();
+
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        // Успешная отправка данных на сервер
+                        System.out.println("ВСЁ НОРМ");
+                        // Дополнительные действия при необходимости
+                    } else {
+                        // Ошибка при отправке данных
+                        System.out.println("АААА ERROR: " + responseCode);
+                        // Обработка ошибки
+                    }
+
+                    // Закрытие соединения
+                    connection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Обработка ошибок при отправке данных
                 }
             }
         });
