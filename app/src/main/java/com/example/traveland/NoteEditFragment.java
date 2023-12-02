@@ -11,6 +11,8 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+
 public class NoteEditFragment extends Fragment {
     private EditText titleEditText;
     private EditText contentEditText;
@@ -70,11 +72,17 @@ public class NoteEditFragment extends Fragment {
                     // Передаем данные в активность
                     if (getActivity() != null) {
                         ((MainActivity) getActivity()).onNoteEditResult(noteId, title, content);
+
+                        // Вызываем метод для отправки данных на сервер
+                        ServerAccesor.sendDataToServer(title, content);
+
+                        // Закрываем фрагмент
                         getActivity().getSupportFragmentManager().popBackStack();
                     }
                 }
             }
         });
+
 
 
         backbutton.setOnClickListener(view1 -> getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.detailFragment, new BlankFragment()).commit());

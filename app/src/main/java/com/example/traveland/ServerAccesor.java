@@ -123,15 +123,19 @@ public class ServerAccesor {
 
         thread.start();
     }
-    public void sendDataToServer(ArrayList<Note> notes) {
+    public static void sendDataToServer(String theme, String noteText) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    // Преобразование списка заметок в JSON
-                    Gson gson = new Gson();
-                    String json = gson.toJson(notes);
+                    // Создание объекта заметки
+                    Note note = new Note(theme, noteText);
 
+                    // Преобразование заметки в JSON
+                    Gson gson = new Gson();
+
+                    String json = gson.toJson(note);
+                    System.out.println(json);
                     // Создание URL и открытие HTTP-соединения
                     URL url = new URL(serviceAddress);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -152,11 +156,11 @@ public class ServerAccesor {
 
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         // Успешная отправка данных на сервер
-                        System.out.println("ВСЁ НОРМ");
+                        System.out.println("Good");
                         // Дополнительные действия при необходимости
                     } else {
                         // Ошибка при отправке данных
-                        System.out.println("АААА ERROR: " + responseCode);
+                        System.out.println("Don't good ERROR: " + responseCode);
                         // Обработка ошибки
                     }
 
